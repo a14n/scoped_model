@@ -172,11 +172,11 @@ class ScopedModel<T extends Model> extends StatelessWidget {
     BuildContext context, {
     bool rebuildOnChange = false,
   }) {
-    final Type type = _type<_InheritedModel<T>>();
-
     Widget widget = rebuildOnChange
-        ? context.inheritFromWidgetOfExactType(type)
-        : context.ancestorInheritedElementForWidgetOfExactType(type)?.widget;
+        ? context.inheritFromWidgetOfExactType<_InheritedModel<T>>()
+        : context
+            .ancestorInheritedElementForWidgetOfExactType<_InheritedModel<T>>()
+            ?.widget;
 
     if (widget == null) {
       throw ScopedModelError();
@@ -184,8 +184,6 @@ class ScopedModel<T extends Model> extends StatelessWidget {
       return (widget as _InheritedModel<T>).model;
     }
   }
-
-  static Type _type<T>() => T;
 }
 
 /// Provides [model] to its [child] [Widget] tree via [InheritedWidget].  When
@@ -276,14 +274,14 @@ class ScopedModelError extends Error {
 
   String toString() {
     return '''Error: Could not find the correct ScopedModel.
-    
+
 To fix, please:
-          
+
   * Provide types to ScopedModel<MyModel>
-  * Provide types to ScopedModelDescendant<MyModel> 
-  * Provide types to ScopedModel.of<MyModel>() 
+  * Provide types to ScopedModelDescendant<MyModel>
+  * Provide types to ScopedModel.of<MyModel>()
   * Always use package imports. Ex: `import 'package:my_app/my_model.dart';
-  
+
 If none of these solutions work, please file a bug at:
 https://github.com/brianegan/scoped_model/issues/new
       ''';
